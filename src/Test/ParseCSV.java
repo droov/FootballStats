@@ -16,8 +16,8 @@ public class ParseCSV {
 
         
         ArrayList<String> headerList = new ArrayList();
-        String filename = "c:/Users/NEEL/Desktop/E0.csv";
-        Scanner sc=new Scanner(new File("c:/Users/NEEL/Desktop/E0.csv"));
+        String filename = "C:/Users/dhruv_000/Downloads/E0.csv";
+        Scanner sc=new Scanner(new File(filename));
         sc.useDelimiter(",");
         String line="",header=""; int numberOfRows=0;
 
@@ -53,7 +53,7 @@ public class ParseCSV {
           str = new StringTokenizer(line);
           for(int j=0;j<data[0].length;j++){
              if(str.hasMoreTokens())//if((token=str.nextToken(",")).equals(null)!=true)
-                data[i][j]=str.nextToken();
+                data[i][j]=str.nextToken(",");
             
                
           }
@@ -65,7 +65,7 @@ public class ParseCSV {
        // }
   for(i=0;i<data.length;i++){
       for(int j=0;j<data[0].length;j++)
-          System.out.print(data[i][j]+"");
+          System.out.print(data[i][j]+" ");
   System.out.println();
   }
 
