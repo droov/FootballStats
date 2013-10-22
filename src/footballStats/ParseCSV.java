@@ -1,4 +1,4 @@
-package Test;
+package footballStats;
 
 import java.util.*;
 import java.io.*;
@@ -6,14 +6,18 @@ import java.text.*;
 
 public class ParseCSV {
 
-	/**
-	 * @param args
-	 *            the command line arguments
-	 */
+	private ArrayList<String> headerList = new ArrayList();
+	private String[][] data;
 
-	public static void main(String[] args) throws Exception {
+	public ArrayList<String> getHeaders() {
+		return headerList;
+	}
 
-		ArrayList<String> headerList = new ArrayList();
+	public String[][] getData() {
+		return data;
+	}
+
+	public void importData() throws Exception {
 		String filename = "C:/Users/dhruv_000/Downloads/E0.csv";
 		Scanner sc = new Scanner(new File(filename));
 		sc.useDelimiter(",");
@@ -21,7 +25,7 @@ public class ParseCSV {
 		int numberOfRows = 0;
 
 		numberOfRows = numberOfRows(filename);
-		System.out.println("number of rows " + numberOfRows);
+		//System.out.println("number of rows " + numberOfRows);
 
 		header = sc.nextLine();
 
@@ -30,16 +34,15 @@ public class ParseCSV {
 		while (head.hasMoreTokens())
 			headerList.add(head.nextToken(","));
 
-		System.out.println("header size or number of columns: "
-				+ headerList.size());
+		//System.out.println("header size or number of columns: " + headerList.size());
 
 		int i = 0;
 
-		String[][] data = new String[numberOfRows][headerList.size()];
+		data = new String[numberOfRows][headerList.size()];
 		String token = "";
 		StringTokenizer str;
 
-		System.out.println("number of coulmns " + data[0].length);
+		//System.out.println("number of coulmns " + data[0].length);
 
 		for (i = 0; i < numberOfRows; i++) {
 			line = sc.nextLine();
@@ -52,12 +55,12 @@ public class ParseCSV {
 
 		}
 
-		for (i = 0; i < data.length; i++) {
+		/*for (i = 0; i < data.length; i++) {
 			for (int j = 0; j < data[0].length; j++)
 				System.out.print(data[i][j] + " ");
 			System.out.println();
-		}
-		
+		}*/
+
 	}// main
 
 	public static int numberOfRows(String filename) throws Exception {
