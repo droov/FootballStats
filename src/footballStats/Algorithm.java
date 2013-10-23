@@ -236,5 +236,117 @@ public class Algorithm {
 		return Performance;
 	}
 	
-	
+	public String[][] halfFullRelation() throws Exception {
+		ParseCSV pcsv = new ParseCSV();
+		pcsv.importData();
+		ArrayList<String> headers = pcsv.getHeaders();
+		String[][] data = pcsv.getData();
+		
+		String[][] columnMap = { { "FTR", "HTR" }, { "6", "9" } };
+		
+		String[][] relation = new String[20][3];
+		
+		String[] teams = getTeams();
+		
+		int i, j;
+		double homeTurnArounds = 0;
+		double awayTurnArounds = 0;
+		
+		for( i = 0 ; i < teams.length ; i++ ) {
+			relation[i][0] = teams[i];
+		}
+		
+		for( i = 0 ; i < relation.length ; i++ ) {
+			for( j = 1 ; j < relation[i].length ; j++) {
+				relation[i][j] = "0";
+			}
+		}
+		
+		
+		for (i = 0 ; i < teams.length ; i++ ) {
+			for (j = 0 ; j < data.length ; j++ ) {
+				if (data[j][2].equals(teams[i]) || data[j][3].equals(teams[i])) {
+					if(data[j][2].equals(teams[i])) {
+						//If it is at home
+						homeTurnArounds = Double.parseDouble(relation[i][1]);
+						if(data[j][Integer.parseInt(columnMap[1][1])].equals("H")) {
+							if(data[j][Integer.parseInt(columnMap[1][0])].equals("A")) {
+								homeTurnArounds -= 1;
+							}
+							else {
+								if(data[j][Integer.parseInt(columnMap[1][0])].equals("D")){
+									homeTurnArounds -= 0.5;
+								}
+							}
+						}
+						if(data[j][Integer.parseInt(columnMap[1][1])].equals("A")) {
+							if(data[j][Integer.parseInt(columnMap[1][0])].equals("H")) {
+								homeTurnArounds += 1;
+							}
+							else {
+								if(data[j][Integer.parseInt(columnMap[1][0])].equals("D")){
+									homeTurnArounds += 0.5;
+								}
+							}
+						}
+						if(data[j][Integer.parseInt(columnMap[1][1])].equals("D")) {
+							if(data[j][Integer.parseInt(columnMap[1][0])].equals("A")) {
+								homeTurnArounds -= 0.5;
+							}
+							else {
+								if(data[j][Integer.parseInt(columnMap[1][0])].equals("H")){
+									homeTurnArounds += 0.5;
+								}
+							}
+						}
+						relation[i][1] = String.valueOf(homeTurnArounds);
+						
+					}
+					else {
+						//for away
+						awayTurnArounds = Double.parseDouble(relation[i][2]);
+						if(data[j][Integer.parseInt(columnMap[1][1])].equals("H")) {
+							if(data[j][Integer.parseInt(columnMap[1][0])].equals("D")) {
+								awayTurnArounds += 0.5;
+							}
+							else {
+								if(data[j][Integer.parseInt(columnMap[1][0])].equals("A")){
+									awayTurnArounds += 1;
+								}
+							}
+						}
+						if(data[j][Integer.parseInt(columnMap[1][1])].equals("A")) {
+							if(data[j][Integer.parseInt(columnMap[1][0])].equals("H")) {
+								awayTurnArounds -= 1;
+							}
+							else {
+								if(data[j][Integer.parseInt(columnMap[1][0])].equals("D")){
+									awayTurnArounds -= 0.5;
+								}
+							}
+						}
+						if(data[j][Integer.parseInt(columnMap[1][1])].equals("D")) {
+							if(data[j][Integer.parseInt(columnMap[1][0])].equals("A")) {
+								awayTurnArounds += 0.5;
+							}
+							else {
+								if(data[j][Integer.parseInt(columnMap[1][0])].equals("H")){
+									awayTurnArounds -= 0.5;
+								}
+							}
+						}
+						relation[i][2] = String.valueOf(awayTurnArounds);
+					}
+				}
+			}
+		}
+		for( i = 0 ; i < relation.length ; i++ ) {
+			for( j = 0 ; j < relation[i].length ; j++) {
+				System.out.print(relation[i][j] + " ");
+			}
+			System.out.println();
+		}	
+			
+		return relation;
+	}
 }
