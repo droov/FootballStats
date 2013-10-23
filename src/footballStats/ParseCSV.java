@@ -18,7 +18,7 @@ public class ParseCSV {
 	}
 
 	public void importData() throws Exception {
-		String filename = "D:/temp/201314.csv";
+		String filename = "C:/Users/dhruv_000/Downloads/E0.csv";
 		Scanner sc = new Scanner(new File(filename));
 		sc.useDelimiter(",");
 		String line = "", header = "";

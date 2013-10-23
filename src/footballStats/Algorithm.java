@@ -141,4 +141,100 @@ public class Algorithm {
 			System.out.println();
 		}
 	}
+	
+	public String[][] homeAwayPerformance() throws Exception {
+		ParseCSV pcsv = new ParseCSV();
+		pcsv.importData();
+		ArrayList<String> headers = pcsv.getHeaders();
+		String[][] data = pcsv.getData();
+		
+		String[] teams = getTeams();
+		
+		String[][] columnMap = { { "HS", "AS", "HST" , "AST" , "HF" , "AF" , "HC" , "AC" , "HY" , "AY" , "HR" , "AR"}, { "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21" } };
+		
+		String[][] Performance = new String[20][7];
+		
+		int i, j;
+		
+		for( i = 0 ; i < teams.length ; i++ ) {
+			Performance[i][0] = teams[i];
+		}
+		
+		for( i = 0 ; i < Performance.length ; i++ ) {
+			for( j = 1 ; j < Performance[i].length ; j++) {
+				Performance[i][j] = "0";
+			}
+		}
+		
+		double positivePerformanceValue = 0;
+		double negativePerformanceValue = 0;
+		double netPerformanceValue = 0;
+		int k;
+		int checkHome = 0;
+		int checkAway = 0;
+		
+		for (i = 0 ; i < teams.length ; i++ ) {
+			for (j = 0 ; j < data.length ; j++ ) {
+				if (data[j][2].equals(teams[i]) || data[j][3].equals(teams[i])) {
+					
+					if(data[j][2].equals(teams[i])) {
+						//If it is at home
+						positivePerformanceValue = Double.parseDouble(Performance[i][1]);
+						negativePerformanceValue = Double.parseDouble(Performance[i][2]);
+						netPerformanceValue = Double.parseDouble(Performance[i][3]);
+						if(checkHome == 0) {
+							positivePerformanceValue = 0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][2])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][0])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][6])]);
+							negativePerformanceValue = 0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][10])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][8])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][4])]);
+							netPerformanceValue = positivePerformanceValue - negativePerformanceValue;
+							checkHome = 1;
+						}
+						else {
+							positivePerformanceValue = (positivePerformanceValue + (0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][2])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][0])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][6])])))/2;
+							negativePerformanceValue = (positivePerformanceValue + (0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][10])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][8])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][4])])))/2;
+							netPerformanceValue = positivePerformanceValue - negativePerformanceValue;
+						}
+						Performance[i][1] = String.valueOf(positivePerformanceValue);
+						Performance[i][2] = String.valueOf(negativePerformanceValue);
+						Performance[i][3] = String.valueOf(netPerformanceValue);
+						
+						
+					}
+					else {
+						//If it is away
+						positivePerformanceValue = Double.parseDouble(Performance[i][4]);
+						negativePerformanceValue = Double.parseDouble(Performance[i][5]);
+						netPerformanceValue = Double.parseDouble(Performance[i][6]);
+						if(checkAway == 0) {
+							positivePerformanceValue = 0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][3])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][1])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][7])]);
+							negativePerformanceValue = 0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][11])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][9])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][5])]);
+							netPerformanceValue = positivePerformanceValue - negativePerformanceValue;
+							checkAway = 1;
+						}
+						else {
+							positivePerformanceValue = (positivePerformanceValue + (0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][3])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][1])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][7])])))/2;
+							negativePerformanceValue = (positivePerformanceValue + (0.5*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][11])]) + 0.3*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][9])]) + 0.2*Double.parseDouble(data[j][Integer.parseInt(columnMap[1][5])])))/2;
+							netPerformanceValue = positivePerformanceValue - negativePerformanceValue;
+						}
+						Performance[i][4] = String.valueOf(positivePerformanceValue);
+						Performance[i][5] = String.valueOf(negativePerformanceValue);
+						Performance[i][6] = String.valueOf(netPerformanceValue);
+					}
+				}
+			}
+			checkHome = 0;
+			checkAway = 0;
+		}
+		
+		for( i = 0 ; i < Performance.length ; i++ ) {
+			for( j = 0 ; j < Performance[i].length ; j++) {
+				System.out.print(Performance[i][j] + " ");
+			}
+			System.out.println();
+		}
+		
+		
+		return Performance;
+	}
+	
+	
 }
