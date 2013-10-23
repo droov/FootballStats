@@ -1,10 +1,41 @@
 package footballStats;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 public class Algorithm {
+	
+	public String[] getTeams() throws Exception {
+		String[] teams = new String[20];
+		
+		ParseCSV pcsv = new ParseCSV();
+		pcsv.importData();
+		ArrayList<String> headers = pcsv.getHeaders();
+		String[][] data = pcsv.getData();
+		int check = 0;
+		int i, j, n;
+		n = 0;
+		for(i = 0 ; i < data.length ; i++ ) {
+			for(j = 0; j < teams.length ; j++) {
+				if(data[i][2].equals(teams[j])) {
+					check = 1;
+					break;
+				}
+				check = 0;
+			}
+			if(check == 0) {
+				teams[n] = data[i][2];
+				n++;
+			}
+		}
+		
+		Arrays.sort(teams);
+		
+		return teams;
+	}
+	
 	public void bettingPatterns() throws Exception {
 		ParseCSV pcsv = new ParseCSV();
 		pcsv.importData();
