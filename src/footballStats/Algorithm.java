@@ -2,8 +2,6 @@ package footballStats;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 
 public class Algorithm {
 	
@@ -12,7 +10,6 @@ public class Algorithm {
 		
 		ParseCSV pcsv = new ParseCSV();
 		pcsv.importData();
-		ArrayList<String> headers = pcsv.getHeaders();
 		String[][] data = pcsv.getData();
 		int check = 0;
 		int i, j, n;
@@ -36,20 +33,21 @@ public class Algorithm {
 		return teams;
 	}
 	
-	public void bettingPatterns() throws Exception {
+	public String[][] bettingPatterns() throws Exception {
 		ParseCSV pcsv = new ParseCSV();
 		pcsv.importData();
 		ArrayList<String> headers = pcsv.getHeaders();
 		String[][] data = pcsv.getData();
 		char result = ' ';
 		int i,j;
-		double home, draw, away, payout, difference, ratio;
-		
-		LinkedHashMap<String, Double> bookerRatio = new LinkedHashMap<String, Double>();
+		int count = 0;
+		double home, draw, away, payout = 0, difference, ratio, totalPayout=0, totalDifference=0;
+				
 		String[][] columnMap = { { "FTR", "B365H", "B365D", "B365A", "BWH", "BWD", "BWA", "GBH", "GBD", "GBA", "IWH", "IWD", "IWA", "LBH", "LBD", "LBA", "PSH", "PSD", "PSA", "WHH", "WHD", "WHA", "SJH", "SJD", "SJA", "VCH", "VCD", "VCA", "BSH", "BSD", "BSA" }, { "6", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51" } };
-
+		String[][]bookerRatio = new String[(columnMap[0].length-1)/3][4];
+		
 		for (j = 1; j < columnMap[0].length; j+=3) {
-			home = draw = away = difference = ratio = 0;
+			home = draw = away = difference = totalDifference = totalPayout = ratio = 0;
 			for (i = 0; i < data.length; i++) {
 				result = data[i][Integer.parseInt(columnMap[1][0])].charAt(0);	
 				home = Double.parseDouble(data[i][Integer.parseInt(columnMap[1][j])]);
@@ -65,13 +63,25 @@ public class Algorithm {
 				difference = calculateDifference(home, draw, away);
 				
 				ratio += difference / payout;				
-				
-			}
-			bookerRatio.put(columnMap[0][j].substring(0, columnMap[0][j].length() - 1), ratio/i);
+				totalPayout += payout;
+				totalDifference += difference;
+			}			
+			//bookerRatio.put(columnMap[0][j].substring(0, columnMap[0][j].length() - 1), ratio/i);
+			bookerRatio[count][0] = columnMap[0][j].substring(0, columnMap[0][j].length() - 1);
+			bookerRatio[count][1] = Double.toString(totalDifference/i);
+			bookerRatio[count][2] = Double.toString(totalPayout/i);
+			bookerRatio[count][3] = Double.toString(ratio/i);
+			count++;
+		}		
+		
+		for(i=0;i<bookerRatio.length;i++){
+			for(j=0;j<bookerRatio[0].length;j++)
+				System.out.print(bookerRatio[i][j] + " ");
+			System.out.println();
 		}
-		for (Entry<String, Double> entry : bookerRatio.entrySet()) {
-		    System.out.println(entry.getKey() + " -> " + entry.getValue());
-		}
+		
+		return bookerRatio;
+		
 	}
 	
 	public double calculateDifference(double home, double draw, double away){
@@ -86,26 +96,26 @@ public class Algorithm {
 		return diff;
 	}
 	
-	public void bettingTeamWise()throws Exception {
+	public String[][] bettingTeamWise()throws Exception {
 		ParseCSV pcsv = new ParseCSV();
 		pcsv.importData();
 		ArrayList<String> headers = pcsv.getHeaders();
 		String[][] data = pcsv.getData();
 		char result = ' ';
 		int i,j,k,games,count=0;
-		double home, draw, away, payout, difference, ratio;
+		double home, draw, away, payout, difference, ratio, totalPayout=0, totalDifference=0;
 				
 		String[][] columnMap = { { "FTR", "B365H", "B365D", "B365A", "BWH", "BWD", "BWA", "GBH", "GBD", "GBA", "IWH", "IWD", "IWA", "LBH", "LBD", "LBA", "PSH", "PSD", "PSA", "WHH", "WHD", "WHA", "SJH", "SJD", "SJA", "VCH", "VCD", "VCA", "BSH", "BSD", "BSA" }, { "6", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51" } };
 		String[] teamList = getTeams();
 		
-		String[][]resultList = new String[((columnMap[0].length-1)/3)*teamList.length][3];
+		String[][]resultList = new String[((columnMap[0].length-1)/3)*teamList.length][5];
 		System.out.println(resultList.length);
 		System.out.println(resultList[0].length);
 		
 		
 		for(k = 0; k < teamList.length; k++){			
 			for (j = 1; j < columnMap[0].length; j+=3) {
-				home = draw = ratio = away = difference = games = 0;
+				home = draw = ratio = away = difference = totalDifference = totalPayout = games =  0;
 				for (i = 0; i < data.length; i++) {
 					if ( data[i][2].equalsIgnoreCase(teamList[k]) || data[i][3].equalsIgnoreCase(teamList[k])) { // checking if the team to be evaluated is either the home or the away team
 						result = data[i][Integer.parseInt(columnMap[1][0])].charAt(0);	
@@ -122,6 +132,8 @@ public class Algorithm {
 						difference = calculateDifference(home, draw, away);
 						
 						ratio += difference / payout;
+						totalDifference += difference;
+						totalPayout += payout;
 						games++;
 					}
 					else 
@@ -130,9 +142,10 @@ public class Algorithm {
 				
 				resultList[count][0] = teamList[k];
 				resultList[count][1] = columnMap[0][j].substring(0, columnMap[0][j].length() - 1);
-				resultList[count][2] = Double.toString(ratio/games);
+				resultList[count][2] = Double.toString(totalDifference/games);
+				resultList[count][3] = Double.toString(totalPayout/games);
+				resultList[count][4] = Double.toString(ratio/games);
 				count++;
-				//bookerRatio.put(columnMap[0][j].substring(0, columnMap[0][j].length() - 1), ratio/games);
 			}
 		}
 		for(int m=0;m<resultList.length;m++){
@@ -140,6 +153,7 @@ public class Algorithm {
 				System.out.print(resultList[m][n] + "\t");
 			System.out.println();
 		}
+		return resultList;
 	}
 	
 	public String[][] homeAwayPerformance() throws Exception {
