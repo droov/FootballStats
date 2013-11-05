@@ -75,7 +75,7 @@ public class ResultOutput {
     headerCell.setCellValue("Betting Site");
     headerCell.setCellStyle(headerStyle);
     headerCell = header.createCell(1);
-    headerCell.setCellValue("Difference");
+    headerCell.setCellValue("Confidence");
     headerCell.setCellStyle(headerStyle);
     headerCell = header.createCell(2);
     headerCell.setCellValue("Payout");
@@ -110,7 +110,7 @@ public class ResultOutput {
 
     // Creating chart
     JFreeChart scatterChart =
-        ChartFactory.createScatterPlot("Betting Patterns", "Difference", "Payout", dataset1,
+        ChartFactory.createScatterPlot("Betting Patterns", "Confidence", "Payout", dataset1,
             PlotOrientation.HORIZONTAL, true, true, false);
     scatterChart.getLegend().setPosition(RectangleEdge.RIGHT);
     NumberFormat format = NumberFormat.getNumberInstance();
@@ -151,7 +151,7 @@ public class ResultOutput {
     headerCell.setCellValue("Betting Site");
     headerCell.setCellStyle(headerStyle);
     headerCell = header.createCell(2);
-    headerCell.setCellValue("Difference");
+    headerCell.setCellValue("Confidence");
     headerCell.setCellStyle(headerStyle);
     headerCell = header.createCell(3);
     headerCell.setCellValue("Payout");
