@@ -81,7 +81,7 @@ public class ResultOutput {
     headerCell.setCellValue("Payout");
     headerCell.setCellStyle(headerStyle);
     headerCell = header.createCell(3);
-    headerCell.setCellValue("D/P Ratio");
+    headerCell.setCellValue("C/P Ratio");
     headerCell.setCellStyle(headerStyle);
 
     // Writing Cell Data
@@ -157,7 +157,7 @@ public class ResultOutput {
     headerCell.setCellValue("Payout");
     headerCell.setCellStyle(headerStyle);
     headerCell = header.createCell(4);
-    headerCell.setCellValue("D/P Ratio");
+    headerCell.setCellValue("C/P Ratio");
     headerCell.setCellStyle(headerStyle);
 
     // Writing Cell Data
